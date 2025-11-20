@@ -19,7 +19,6 @@ export default function RequesterPage() {
     fetchRequests();
 
     const onCreated = (doc) => {
-      // show new requests (global)
       setRequests(prev => [doc, ...prev]);
     };
     const onUpdated = (doc) => {
@@ -33,7 +32,6 @@ export default function RequesterPage() {
     socket.on('request:updated', onUpdated);
     socket.on('request:deleted', onDeleted);
 
-    // optionally join team room so this requester receives team-only events
     if (form.teamId) socket.emit('team:join', form.teamId);
 
     return () => {
@@ -42,7 +40,6 @@ export default function RequesterPage() {
       socket.off('request:deleted', onDeleted);
       if (form.teamId) socket.emit('team:leave', form.teamId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchRequests = async () => {
@@ -60,7 +57,6 @@ export default function RequesterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // derive spocId from TEAMS mapping before sending (optional)
       const team = TEAMS.find(t => t.id === form.teamId);
       const body = { ...form, spocId: team?.spocId || null };
       const res = await fetch(`${API}/api/requests`, {
@@ -75,7 +71,6 @@ export default function RequesterPage() {
       }
       const created = await res.json();
       setForm({ requester: '', category: 'Tea', details: '', location: '', quantity: '', teamId: form.teamId });
-      // socket listeners will update UI, but update immediately for snappiness:
       setRequests(prev => [created, ...prev]);
     } catch (err) {
       console.error('handleSubmit err', err);
@@ -91,20 +86,20 @@ export default function RequesterPage() {
 
       <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow card-anim mb-4">
         <div className="mb-2">
-          <label className="block">Requester name</label>
-          <input name="requester" value={form.requester} onChange={handleChange} className="border p-2 w-full" />
+          <label className="block font-semibold mb-1">Requester name</label>
+          <input name="requester" value={form.requester} onChange={handleChange} className="border p-2 w-full rounded" />
         </div>
 
         <div className="mb-2">
-          <label className="block">Team</label>
-          <select name="teamId" value={form.teamId} onChange={handleChange} className="border p-2 w-full">
+          <label className="block font-semibold mb-1">Team</label>
+          <select name="teamId" value={form.teamId} onChange={handleChange} className="border p-2 w-full rounded">
             {TEAMS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
         </div>
 
         <div className="mb-2">
-          <label className="block">Category</label>
-          <select name="category" value={form.category} onChange={handleChange} className="border p-2 w-full">
+          <label className="block font-semibold mb-1">Category</label>
+          <select name="category" value={form.category} onChange={handleChange} className="border p-2 w-full rounded">
             <option value="Tea">Tea</option>
             <option value="Coffee">Coffee</option>
             <option value="WiFi">WiFi</option>
@@ -113,29 +108,30 @@ export default function RequesterPage() {
         </div>
 
         <div className="mb-2">
-          <label className="block">Location (required)</label>
-          <input name="location" value={form.location} onChange={handleChange} required className="border p-2 w-full" />
+          <label className="block font-semibold mb-1">Location (required)</label>
+          <input name="location" value={form.location} onChange={handleChange} required className="border p-2 w-full rounded" />
         </div>
 
         <div className="mb-2">
-          <label className="block">Quantity</label>
-          <input name="quantity" value={form.quantity} onChange={handleChange} className="border p-2 w-full" />
+          <label className="block font-semibold mb-1">Quantity</label>
+          <input name="quantity" value={form.quantity} onChange={handleChange} className="border p-2 w-full rounded" />
         </div>
 
         <div className="mb-2">
-          <label className="block">Details</label>
-          <textarea name="details" value={form.details} onChange={handleChange} className="border p-2 w-full" />
+          <label className="block font-semibold mb-1">Details</label>
+          <textarea name="details" value={form.details} onChange={handleChange} className="border p-2 w-full rounded" rows="3" />
         </div>
 
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Submit Request</button>
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Submit Request</button>
       </form>
 
       <h3 className="text-lg font-bold mb-2">Latest requests</h3>
       <ul className="bg-white p-4 rounded shadow">
+        {requests.length === 0 && <li className="py-4 text-center text-gray-500">No requests yet.</li>}
         {requests.map(r => (
-          <li key={r._id} className="border-b py-2">
+          <li key={r._id} className="border-b py-2 last:border-b-0">
             <div className="font-semibold">{r.requester || '—'} • {r.category}</div>
-            <div className="text-sm text-gray-600">{r.location} • {r.quantity} • Team: {r.teamId}</div>
+            <div className="text-sm text-gray-600">{r.location} • {r.quantity} • Team: {TEAMS.find(t => t.id === r.teamId)?.name || r.teamId}</div>
             <div className="mt-1">{r.details}</div>
             <div className="text-xs text-gray-500 mt-1">{new Date(r.createdAt).toLocaleString()}</div>
           </li>
