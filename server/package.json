@@ -1,0 +1,13 @@
+﻿{
+  "name": "team-service-request-server",
+  "version": "1.0.0",
+  "description": "Auto-generated package.json for Render deployment",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  
+  "engines": {
+    "node": ">=14"
+  }
+}
