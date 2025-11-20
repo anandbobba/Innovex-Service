@@ -4,6 +4,8 @@
       "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
+        // 💡 CRITICAL FIX: Add the "buildCommand" to run the build from within the 'client' folder
+        "buildCommand": "npm install --prefix client && npm run build --prefix client",
         "distDir": "client/dist"
       }
     },
@@ -11,8 +13,7 @@
       "src": "server/server.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["server/**"],
-        "maxDuration": 10
+        "includeFiles": ["server/**"]
       }
     }
   ],
