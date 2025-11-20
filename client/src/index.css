@@ -1,0 +1,150 @@
+/* client/src/index.css */
+
+/* Tailwind layers (only once) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------
+   Basic custom utilities
+   --------------------------- */
+
+/* card hover lift */
+.card-anim {
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card-anim:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(20, 40, 80, 0.12);
+}
+
+/* Logo in top-right */
+.app-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: inline-block;
+  transform-origin: center;
+}
+
+/* Brand button (use alongside Tailwind utilities) */
+.btn-brand {
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium;
+  background: linear-gradient(90deg, rgba(51,136,240,1) 0%, rgba(44,111,209,1) 100%);
+  color: white;
+  box-shadow: 0 6px 18px rgba(51,136,240,0.12);
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.btn-brand:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(34,95,180,0.16); }
+.btn-ghost {
+  @apply inline-flex items-center justify-center px-3 py-1 rounded border;
+}
+
+/* Small utility text styles */
+.small-muted { @apply text-sm text-gray-500; }
+
+/* Header / top bar helpers */
+.app-header {
+  backdrop-filter: blur(6px);
+  background: rgba(255,255,255,0.65);
+  border-bottom: 1px solid rgba(15,23,42,0.04);
+}
+.app-header-inner {
+  max-width: 96rem;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+}
+
+/* Notification badge (pulsing) */
+.notification-badge {
+  position: relative;
+  display: inline-block;
+}
+.notification-badge .dot {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #FF7A59; /* accent color */
+  box-shadow: 0 0 0 0 rgba(255,122,89,0.6);
+  animation: pulseNotify 1.2s ease-out infinite;
+}
+
+/* small responsive layout helpers */
+.container-sm {
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* ---------------------------
+   Fallback keyframes (also keep in tailwind config)
+   --------------------------- */
+
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+@keyframes pop {
+  0%   { transform: scale(0.96); opacity: 0; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+@keyframes pulseNotify {
+  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,122,89,0.6); }
+  70%  { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(255,122,89,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,122,89,0); }
+}
+
+/* handy animation utility classes if Tailwind not built yet */
+.animate-float { animation: float 3.6s ease-in-out infinite; }
+.animate-pop { animation: pop 220ms cubic-bezier(.2,.9,.3,1) forwards; }
+.animate-pulseNotify { animation: pulseNotify 1.2s ease-out; }
+
+/* ---------------------------
+   Accessibility helpers
+   --------------------------- */
+.sr-only {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden; clip: rect(1px,1px,1px,1px); white-space: nowrap;
+  border: 0; padding: 0; margin: -1px;
+}
+
+/* ---------------------------
+   Small tweaks for the SPOC page specifically
+   (you can keep these here so changes load centrally)
+   --------------------------- */
+.spoc-list-item { display:flex; gap:1rem; align-items:flex-start; }
+.spoc-status {
+  padding: .25rem .5rem;
+  border-radius: .375rem;
+  font-size: 0.78rem;
+}
+.spoc-status.pending { background: #FEF3C7; color: #92400E; } /* yellow */
+.spoc-status.done { background: #ECFDF5; color: #065F46; }    /* green */
+
+/* keep layout pleasant on small screens */
+@media (max-width: 640px) {
+  .app-logo { width: 44px; height: 44px; }
+  .card-anim:hover { transform: none; box-shadow: none; }
+}
+/* add to index.css */
+.header-logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.app-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+.header-title {
+  font-size: 1.6rem;
+  letter-spacing: 0.6px;
+}
