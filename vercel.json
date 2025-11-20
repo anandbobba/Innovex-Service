@@ -1,41 +1,33 @@
 {
-  "version": 2,
   "builds": [
-    {
-      "src": "server/server.js",
-      "use": "@vercel/node"
-    },
     {
       "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "client/dist"
+      }
+    },
+    {
+      "src": "server/server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["server/**"],
+        "maxDuration": 10
       }
     }
   ],
   "routes": [
     {
-      "src": "/socket.io/(.*)",
-      "dest": "server/server.js"
-    },
-    {
       "src": "/api/(.*)",
       "dest": "server/server.js"
     },
     {
-      "src": "/health",
+      "src": "/socket.io/(.*)",
       "dest": "server/server.js"
     },
     {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|mp4|webm|ogg|mp3|wav))",
-      "dest": "client/dist/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "client/dist/index.html"
+      "dest": "client/dist/$1"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
